@@ -18,6 +18,16 @@ class SaleTransaction:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 
+class VoidTransaction:
+
+    def __init__(self, reference_id, transaction_type):
+        self.reference_id = reference_id
+        self.transaction_type = transaction_type
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
+
 def get_card_number():
     return "4200000000000000"
 
@@ -54,6 +64,24 @@ def get_address():
     return 'Panda Street, China'
 
 
+def get_authorization():
+    return "cGFuZGFoYXB2YTprYWNoYW1haw=="
+
+
+def get_reference_id():
+    return None
+
+
+def get_void_transaction_type():
+    return "void"
+
+
+def create_random_void_transaction():
+    transaction_type = get_void_transaction_type()
+    tr = VoidTransaction(None, transaction_type)
+    return tr
+
+
 def create_random_payment_transaction():
     card_number = get_card_number()
     cvv = get_cvv()
@@ -80,6 +108,3 @@ def create_request(transaction_json):
     out, err = p.communicate()
     return out
 
-
-tr = create_random_payment_transaction()
-create_request(tr.toJSON())
