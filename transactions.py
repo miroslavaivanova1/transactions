@@ -118,5 +118,5 @@ def create_request(transaction_json, auth_key, end_point):
               '}\' '
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
-    r = out.split("ResponseCode:")
-    return r[0], r[1]
+    r = out.split(b"ResponseCode:")
+    return r[0], r[1].decode()
