@@ -28,6 +28,12 @@ class VoidTransaction:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 
+def get_config():
+    with open('config.json') as json_data_file:
+        data = json.load(json_data_file)
+    return data
+
+
 def get_card_number():
     return "4200000000000000"
 
@@ -65,7 +71,8 @@ def get_address():
 
 
 def get_authorization():
-    return "cGFuZGFoYXB2YTprYWNoYW1haw=="
+    config = get_config()
+    return config['auth_key']
 
 
 def get_reference_id():
@@ -97,10 +104,10 @@ def create_random_payment_transaction():
     return tr
 
 
-def create_request(transaction_json):
+def create_request(transaction_json, auth_key=get_authorization()):
     command = 'curl http://localhost:3001/payment_transactions' \
               ' -H  "Content-Type: application/json;charset=UTF-8"' \
-              ' -H "Authorization: Basic cGFuZGFoYXB2YTprYWNoYW1haw=="'\
+              ' -H "Authorization: Basic ' + auth_key + '"'\
               ' -d \'{' + \
               '"payment_transaction": ' + transaction_json + \
               '}\' '
