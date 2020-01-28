@@ -3,6 +3,7 @@ import subprocess
 
 
 class SaleTransaction:
+
     def __init__(self, card_number, cvv, expiration_date, amount, usage, transaction_type, card_holder, email, address):
         self.card_number = card_number
         self.cvv = cvv
@@ -104,8 +105,12 @@ def create_random_payment_transaction():
     return tr
 
 
-def create_request(transaction_json, auth_key=get_authorization()):
-    command = 'curl http://localhost:3001/payment_transactions' \
+def payment_transaction_request(transaction_json, auth_key=get_authorization()):
+    return create_request(transaction_json, auth_key, "payment_transactions")
+
+
+def create_request(transaction_json, auth_key, end_point):
+    command = 'curl -s -w \'ResponseCode:%{response_code}\' http://localhost:3001/' + end_point + \
               ' -H  "Content-Type: application/json;charset=UTF-8"' \
               ' -H "Authorization: Basic ' + auth_key + '"'\
               ' -d \'{' + \
@@ -113,5 +118,5 @@ def create_request(transaction_json, auth_key=get_authorization()):
               '}\' '
     p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
-    return out
-
+    r = out.split("ResponseCode:")
+    return r[0], r[1]
