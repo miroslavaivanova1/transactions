@@ -47,6 +47,3 @@ def test_void_transaction_non_existent_payment():
     transaction_void.reference_id = "dasd21312"
     void_response, void_http_status = payment_transaction_request(transaction_void.toJSON())
     assert void_http_status == "422"
-
-
-test_payment_transaction_request_correct()
